@@ -16,4 +16,8 @@ jobs:
         run: swift build -v
 
       - name: Test
-        run: swift test -v
+        run: |
+          for pkg in Packages/*/; do
+            echo "Testing $pkg"
+            swift test --package-path "$pkg" -v
+          done
