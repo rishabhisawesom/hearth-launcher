@@ -1,14 +1,11 @@
 import SwiftUI
 import CoreUI
 import CoreNavigation
+import FeatureApplications
 
 struct HomeView: View {
     private let columns = 4
-    private let tiles = [
-        "Netflix", "Spotify", "Safari", "Photos",
-        "Music", "Settings", "YouTube", "Plex",
-        "Games", "News", "Weather", "Files",
-    ]
+    private let apps = CuratedApps.streaming
 
     @State private var focusedIndex = 0
 
@@ -23,8 +20,8 @@ struct HomeView: View {
                 .foregroundStyle(HearthColors.textPrimary)
 
             LazyVGrid(columns: gridColumns, spacing: HearthSpacing.grid) {
-                ForEach(tiles.indices, id: \.self) { index in
-                    TileView(title: tiles[index], isFocused: index == focusedIndex)
+                ForEach(apps.indices, id: \.self) { index in
+                    TileView(title: apps[index].name, isFocused: index == focusedIndex)
                 }
             }
         }
@@ -36,15 +33,22 @@ struct HomeView: View {
         .onKeyPress(.rightArrow) { move(.right); return .handled }
         .onKeyPress(.upArrow) { move(.up); return .handled }
         .onKeyPress(.downArrow) { move(.down); return .handled }
+        .onKeyPress(.return) { launchFocused(); return .handled }
     }
 
     private func move(_ direction: FocusDirection) {
         focusedIndex = FocusGrid.moved(
             from: focusedIndex,
             columns: columns,
-            itemCount: tiles.count,
+            itemCount: apps.count,
             direction: direction
         )
+    }
+
+    @MainActor
+    private func launchFocused() {
+        guard apps.indices.contains(focusedIndex) else { return }
+        _ = AppLauncher.launch(apps[focusedIndex])
     }
 }
 
