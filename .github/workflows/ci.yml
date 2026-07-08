@@ -12,5 +12,12 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Check scaffold
-        run: test -f README.md
+      - name: Build
+        run: swift build -v
+
+      - name: Test
+        run: |
+          for pkg in Packages/*/; do
+            echo "Testing $pkg"
+            swift test --package-path "$pkg" -v
+          done
