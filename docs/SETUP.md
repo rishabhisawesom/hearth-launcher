@@ -3,11 +3,32 @@
 ## Developer
 
 1. Clone the repo
-2. Open `Package.swift` in Xcode 16+ (File → Open → select Package.swift)
-3. Run `swift build` or `swift test` from the repo root
-4. Select the **Hearth** scheme and Run (⌘R) for the SwiftUI app
+2. Requires macOS 15+, Apple Silicon, and Xcode 16+ (or Swift toolchain from Command Line Tools)
 
-Requires macOS 15+ and Apple Silicon.
+### Run in Xcode
+
+1. Open `Package.swift` in Xcode (File → Open → select `Package.swift`)
+2. Select the **Hearth** scheme in the toolbar
+3. Press **⌘R** (Run)
+
+You should see a dark SwiftUI window titled **Hearth** with a module version footer.
+
+### Run from Terminal
+
+```bash
+swift build
+.build/debug/Hearth
+```
+
+You should see the same Hearth window launch from the built executable.
+
+To run tests from the repo root:
+
+```bash
+swift test
+```
+
+Tests also live under `Packages/*/Tests` — run per package with `swift test --package-path Packages/<Name>`.
 
 ## Living-room Mac mini (planned)
 

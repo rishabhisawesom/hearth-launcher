@@ -10,7 +10,21 @@ A premium, open-source macOS launcher that turns an Apple Silicon Mac mini into 
 
 ## Status
 
-M0 scaffold: SwiftPM workspace with Hearth executable and CoreUI, CoreNavigation, CoreSystem, RemoteProtocol packages. Open `Package.swift` in Xcode to run the app.
+M0 scaffold: SwiftPM workspace with Hearth executable and CoreUI, CoreNavigation, CoreSystem, RemoteProtocol packages.
+
+## Run
+
+### Run in Xcode
+
+Open `Package.swift`, select the **Hearth** scheme, press **⌘R**.
+
+### Run from Terminal
+
+```bash
+swift build && .build/debug/Hearth
+```
+
+See [Setup](docs/SETUP.md) for details and what you should see.
 
 ## Docs
 
