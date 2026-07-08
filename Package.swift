@@ -12,6 +12,7 @@ let package = Package(
         .package(path: "Packages/CoreNavigation"),
         .package(path: "Packages/CoreSystem"),
         .package(path: "Packages/RemoteProtocol"),
+        .package(path: "Packages/FeatureApplications"),
     ],
     targets: [
         .executableTarget(
@@ -21,6 +22,7 @@ let package = Package(
                 "CoreNavigation",
                 "CoreSystem",
                 "RemoteProtocol",
+                "FeatureApplications",
             ]
         ),
     ]
