@@ -14,14 +14,19 @@ struct HearthApp: App {
 }
 
 struct ContentView: View {
+    private enum Copy {
+        static let appName = "Hearth"
+        static let tagline = "Living room launcher"
+    }
+
     var body: some View {
         ZStack {
             HearthColors.background.ignoresSafeArea()
             VStack(spacing: 12) {
-                Text("Hearth")
+                Text(Copy.appName)
                     .font(HearthTypography.title)
                     .foregroundStyle(HearthColors.textPrimary)
-                Text("Living room launcher")
+                Text(Copy.tagline)
                     .font(HearthTypography.body)
                     .foregroundStyle(HearthColors.accent)
                 Text(moduleVersions)
