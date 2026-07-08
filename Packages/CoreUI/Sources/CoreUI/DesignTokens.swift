@@ -13,3 +13,13 @@ public enum HearthTypography {
     public static let body = Font.system(size: 24, weight: .medium, design: .rounded)
     public static let caption = Font.system(size: 13, weight: .regular, design: .rounded)
 }
+
+public enum HearthSpacing {
+    public static let grid: CGFloat = 24
+    public static let screenPadding: CGFloat = 48
+    public static let section: CGFloat = 32
+}
+
+public enum HearthRadius {
+    public static let tile: CGFloat = 12
+}

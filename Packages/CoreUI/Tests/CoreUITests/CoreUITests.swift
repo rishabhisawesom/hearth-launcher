@@ -15,5 +15,7 @@ final class CoreUITests: XCTestCase {
         XCTAssertNotNil(HearthTypography.title)
         XCTAssertNotNil(HearthTypography.body)
         XCTAssertNotNil(HearthTypography.caption)
+        XCTAssertEqual(HearthSpacing.grid, 24)
+        XCTAssertEqual(HearthRadius.tile, 12)
     }
 }

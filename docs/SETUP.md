@@ -11,7 +11,7 @@
 2. Select the **Hearth** scheme in the toolbar
 3. Press **⌘R** (Run)
 
-You should see a dark SwiftUI window titled **Hearth** with a module version footer.
+You should see a fullscreen dark UI with a tile grid. Use arrow keys to move focus.
 
 ### Run from Terminal
 
@@ -20,21 +20,79 @@ swift build
 .build/debug/Hearth
 ```
 
-You should see the same Hearth window launch from the built executable.
+Quit when done: close the app, use **Quit Hearth** in Settings (⌘,), or `pkill -f ".build/debug/Hearth"`.
 
-To run tests from the repo root:
+To run tests per package:
 
 ```bash
-swift test
+swift test --package-path Packages/CoreUI
+swift test --package-path Packages/CoreNavigation
+swift test --package-path Packages/CoreSystem
+swift test --package-path Packages/RemoteProtocol
 ```
 
-Tests also live under `Packages/*/Tests` — run per package with `swift test --package-path Packages/<Name>`.
+## Living-room Mac mini
 
-## Living-room Mac mini (planned)
+Set up a dedicated TV user so Hearth can own the screen at boot.
 
-1. Create a dedicated macOS user account
-2. Enable auto-login for that user
-3. Add Hearth as a login item
-4. Enable Bluetooth for iPhone remote pairing
+### 1. Create a dedicated user
 
-Details will expand as kiosk mode lands in M1.
+1. **System Settings → Users & Groups → Add Account**
+2. Name it e.g. `Living Room` (standard user is fine)
+3. Sign in once to complete setup, then use this account for the Mac mini on the TV
+
+### 2. Enable auto-login
+
+1. **System Settings → Users & Groups → Login Options**
+2. Set **Automatic login** to the living-room user
+3. Reboot once to confirm the account logs in without a password prompt
+
+### 3. Install and launch Hearth
+
+**Development build:**
+
+```bash
+swift build
+.build/debug/Hearth
+```
+
+**Production:** install a signed `Hearth.app` to `/Applications` (notarization guide coming in M7).
+
+### 4. Configure kiosk mode in Hearth
+
+Open **Settings** with **⌘,** while Hearth is focused:
+
+| Setting | Purpose |
+|---------|---------|
+| **Hide Dock and menu bar** | Fullscreen TV experience (on by default) |
+| **Launch at login** | Start Hearth when the living-room user logs in |
+| **Quit Hearth** | Escape hatch to exit the launcher |
+
+> **Note:** **Launch at login** requires a proper `.app` bundle. The raw `swift build` binary may fail to register — use a packaged app for production.
+
+### 5. Escape hatch
+
+Hearth is a kiosk shell, not a lockdown:
+
+- **⌘Tab** — switch to another app
+- **⌘,** — open Hearth Settings
+- **Quit Hearth** — exit completely
+
+To return to normal macOS, quit Hearth or reboot and sign into a different user.
+
+### 6. Bluetooth (iPhone remote)
+
+Enable Bluetooth on the Mac mini. iPhone companion app pairing lands in M5–M6.
+
+## Manual acceptance test (M1 exit)
+
+Run on real hardware before closing M1:
+
+1. Reboot the Mac mini
+2. Living-room user auto-logs in
+3. Hearth launches fullscreen with no menu bar or Dock
+4. Arrow keys move focus across the tile grid
+5. **⌘,** opens Settings; toggles work
+6. **Quit Hearth** exits cleanly
+
+Record results in Linear **RIS-45**.

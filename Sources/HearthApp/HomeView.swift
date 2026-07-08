@@ -13,22 +13,22 @@ struct HomeView: View {
     @State private var focusedIndex = 0
 
     private var gridColumns: [GridItem] {
-        Array(repeating: GridItem(.flexible(), spacing: 24), count: columns)
+        Array(repeating: GridItem(.flexible(), spacing: HearthSpacing.grid), count: columns)
     }
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 32) {
+        VStack(alignment: .leading, spacing: HearthSpacing.section) {
             Text("Hearth")
                 .font(HearthTypography.title)
                 .foregroundStyle(HearthColors.textPrimary)
 
-            LazyVGrid(columns: gridColumns, spacing: 24) {
+            LazyVGrid(columns: gridColumns, spacing: HearthSpacing.grid) {
                 ForEach(tiles.indices, id: \.self) { index in
                     TileView(title: tiles[index], isFocused: index == focusedIndex)
                 }
             }
         }
-        .padding(48)
+        .padding(HearthSpacing.screenPadding)
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
         .background(HearthColors.background)
         .focusable()
@@ -58,9 +58,9 @@ private struct TileView: View {
             .foregroundStyle(HearthColors.textPrimary)
             .frame(maxWidth: .infinity, minHeight: 120)
             .background(HearthColors.surface)
-            .clipShape(RoundedRectangle(cornerRadius: 12))
+            .clipShape(RoundedRectangle(cornerRadius: HearthRadius.tile))
             .overlay {
-                RoundedRectangle(cornerRadius: 12)
+                RoundedRectangle(cornerRadius: HearthRadius.tile)
                     .strokeBorder(isFocused ? HearthColors.accent : .clear, lineWidth: 4)
             }
             .scaleEffect(isFocused ? 1.05 : 1.0)
