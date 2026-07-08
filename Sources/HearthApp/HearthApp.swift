@@ -19,14 +19,14 @@ struct ContentView: View {
             HearthColors.background.ignoresSafeArea()
             VStack(spacing: 12) {
                 Text("Hearth")
-                    .font(HearthTypography.hero)
-                    .foregroundStyle(.white)
+                    .font(HearthTypography.title)
+                    .foregroundStyle(HearthColors.textPrimary)
                 Text("Living room launcher")
-                    .font(HearthTypography.sectionTitle)
+                    .font(HearthTypography.body)
                     .foregroundStyle(HearthColors.accent)
                 Text(moduleVersions)
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
+                    .font(HearthTypography.caption)
+                    .foregroundStyle(HearthColors.textSecondary)
             }
         }
         .frame(minWidth: 960, minHeight: 540)
