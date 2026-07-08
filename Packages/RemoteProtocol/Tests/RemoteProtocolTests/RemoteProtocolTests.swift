@@ -3,7 +3,7 @@ import XCTest
 
 final class RemoteProtocolTests: XCTestCase {
     func testServiceName() {
-        XCTAssertEqual(RemoteProtocolKit.serviceName, "LRRL")
+        XCTAssertEqual(RemoteProtocolKit.serviceName, "Hearth")
     }
 
     func testSelectMessage() {
