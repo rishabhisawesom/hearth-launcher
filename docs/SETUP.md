@@ -3,8 +3,11 @@
 ## Developer
 
 1. Clone the repo
-2. Open in Xcode (workspace coming in M0 scaffold)
-3. Build for macOS 15+, Apple Silicon
+2. Open `Package.swift` in Xcode 16+ (File → Open → select Package.swift)
+3. Run `swift build` or `swift test` from the repo root
+4. Select the **Hearth** scheme and Run (⌘R) for the SwiftUI app
+
+Requires macOS 15+ and Apple Silicon.
 
 ## Living-room Mac mini (planned)
 

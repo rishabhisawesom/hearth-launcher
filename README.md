@@ -10,7 +10,7 @@ A premium, open-source macOS launcher that turns an Apple Silicon Mac mini into 
 
 ## Status
 
-Planning and scaffold phase. See [docs/ROADMAP.md](docs/ROADMAP.md).
+M0 scaffold: SwiftPM workspace with Hearth executable and CoreUI, CoreNavigation, CoreSystem, RemoteProtocol packages. Open `Package.swift` in Xcode to run the app.
 
 ## Docs
 
