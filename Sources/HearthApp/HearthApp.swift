@@ -7,7 +7,7 @@ struct HearthApp: App {
     @NSApplicationDelegateAdaptor(HearthAppDelegate.self) private var appDelegate
 
     var body: some Scene {
-        Settings { EmptyView() }
+        Settings { SettingsView() }
     }
 }
 
@@ -32,6 +32,6 @@ final class HearthAppDelegate: NSObject, NSApplicationDelegate {
     }
 
     func applicationDidBecomeActive(_ notification: Notification) {
-        KioskWindow.hideSystemChrome()
+        KioskWindow.applySystemChrome()
     }
 }

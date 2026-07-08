@@ -8,7 +8,10 @@ let package = Package(
         .library(name: "CoreSystem", targets: ["CoreSystem"]),
     ],
     targets: [
-        .target(name: "CoreSystem"),
+        .target(
+            name: "CoreSystem",
+            linkerSettings: [.linkedFramework("ServiceManagement")]
+        ),
         .testTarget(name: "CoreSystemTests", dependencies: ["CoreSystem"]),
     ]
 )

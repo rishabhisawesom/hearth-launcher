@@ -20,7 +20,15 @@ public enum KioskWindow {
         window.setFrame(screen.frame, display: true)
         window.makeKeyAndOrderFront(nil)
         if hideChrome {
+            applySystemChrome()
+        }
+    }
+
+    public static func applySystemChrome() {
+        if KioskPreferences.hideSystemChrome {
             hideSystemChrome()
+        } else {
+            showSystemChrome()
         }
     }
 
@@ -28,5 +36,9 @@ public enum KioskWindow {
         NSApp.activate(ignoringOtherApps: true)
         // ponytail: hide* pair is valid; mixing autoHide* + hide* crashes.
         NSApp.presentationOptions = [.hideMenuBar, .hideDock]
+    }
+
+    public static func showSystemChrome() {
+        NSApp.presentationOptions = []
     }
 }
