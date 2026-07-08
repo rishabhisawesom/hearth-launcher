@@ -1,5 +1,4 @@
 import AppKit
-import SwiftUI
 
 public final class KeyableWindow: NSWindow {
     public override var canBecomeKey: Bool { true }
@@ -8,7 +7,7 @@ public final class KeyableWindow: NSWindow {
 
 @MainActor
 public enum KioskWindow {
-    public static func configure(_ window: NSWindow) {
+    public static func configure(_ window: NSWindow, hideChrome: Bool = true) {
         guard let screen = window.screen ?? NSScreen.main else { return }
 
         window.styleMask = [.borderless, .fullSizeContentView]
@@ -20,7 +19,9 @@ public enum KioskWindow {
         window.backgroundColor = .black
         window.setFrame(screen.frame, display: true)
         window.makeKeyAndOrderFront(nil)
-        hideSystemChrome()
+        if hideChrome {
+            hideSystemChrome()
+        }
     }
 
     public static func hideSystemChrome() {
@@ -28,19 +29,4 @@ public enum KioskWindow {
         // ponytail: hide* pair is valid; mixing autoHide* + hide* crashes.
         NSApp.presentationOptions = [.hideMenuBar, .hideDock]
     }
-}
-
-public struct KioskWindowConfigurator: NSViewRepresentable {
-    public init() {}
-
-    public func makeNSView(context: Context) -> NSView {
-        let view = NSView()
-        Task { @MainActor in
-            guard let window = view.window else { return }
-            KioskWindow.configure(window)
-        }
-        return view
-    }
-
-    public func updateNSView(_ nsView: NSView, context: Context) {}
 }
