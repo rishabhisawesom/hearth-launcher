@@ -18,6 +18,8 @@ public enum HearthSpacing {
     public static let grid: CGFloat = 24
     public static let screenPadding: CGFloat = 48
     public static let section: CGFloat = 32
+    /// Room for focused tile scale + stroke so edge tiles do not bleed into neighbors.
+    public static let focusOverflow: CGFloat = 12
 }
 
 public enum HearthRadius {
