@@ -37,4 +37,8 @@ public enum CuratedApps {
         CuratedApp(id: "youtube", name: "YouTube", bundleNames: ["YouTube"]),
         CuratedApp(id: "hotstar", name: "Hotstar", bundleNames: ["Hotstar", "JioHotstar"]),
     ]
+
+    public static func app(id: String) -> CuratedApp? {
+        streaming.first { $0.id == id }
+    }
 }

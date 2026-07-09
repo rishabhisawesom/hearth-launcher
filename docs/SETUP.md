@@ -96,3 +96,13 @@ Run on real hardware before closing M1:
 6. **Quit Hearth** exits cleanly
 
 Record results in Linear **RIS-45**.
+
+## M2 performance smoke
+
+On Mac mini hardware with the home screen open:
+
+1. Arrow through all visible sections and tiles — focus should update instantly with no visible stutter
+2. Horizontal rows with 4 tiles should scroll smoothly when focused tile is near the edge
+3. Optional: Instruments → Time Profiler while navigating; target 60 FPS sustained
+
+Record results in Linear **RIS-65**.
