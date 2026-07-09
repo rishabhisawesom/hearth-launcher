@@ -1,10 +1,12 @@
 import AppKit
 import SwiftUI
 import CoreSystem
+import FeatureApplications
 
 struct SettingsView: View {
     @State private var hideSystemChrome = KioskPreferences.hideSystemChrome
     @State private var launchAtLogin = LoginItem.isRegistered
+    @State private var launchStrategy = LaunchStrategyPreferences.strategy
     @State private var errorMessage: String?
 
     var body: some View {
@@ -19,6 +21,14 @@ struct SettingsView: View {
                 .onChange(of: launchAtLogin) { _, newValue in
                     updateLoginItem(enabled: newValue)
                 }
+
+            Picker("Streaming launch", selection: $launchStrategy) {
+                Text("Prefer app, else browser").tag(LaunchStrategy.preferNativeApp)
+                Text("Browser only").tag(LaunchStrategy.browserOnly)
+            }
+            .onChange(of: launchStrategy) { _, newValue in
+                LaunchStrategyPreferences.strategy = newValue
+            }
 
             if let errorMessage {
                 Text(errorMessage)
