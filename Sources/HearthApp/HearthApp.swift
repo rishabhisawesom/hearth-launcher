@@ -26,7 +26,7 @@ final class HearthAppDelegate: NSObject, NSApplicationDelegate {
             backing: .buffered,
             defer: false
         )
-        window.contentView = NSHostingView(rootView: HomeView())
+        window.contentView = NSHostingView(rootView: RootView())
         KioskWindow.configure(window)
         self.window = window
     }
