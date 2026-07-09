@@ -6,7 +6,7 @@ import FeatureApplications
 struct SettingsView: View {
     @State private var hideSystemChrome = KioskPreferences.hideSystemChrome
     @State private var launchAtLogin = LoginItem.isRegistered
-    @State private var sectionOrder = SectionLayoutPreferences.order
+    @State private var launchStrategy = LaunchStrategyPreferences.strategy
     @State private var errorMessage: String?
 
     var body: some View {
@@ -22,31 +22,12 @@ struct SettingsView: View {
                     updateLoginItem(enabled: newValue)
                 }
 
-            Section("Favorites") {
-                ForEach(CuratedApps.streaming) { app in
-                    Toggle(app.name, isOn: favoriteBinding(for: app.id))
-                }
+            Picker("Streaming launch", selection: $launchStrategy) {
+                Text("Prefer app, else browser").tag(LaunchStrategy.preferNativeApp)
+                Text("Browser only").tag(LaunchStrategy.browserOnly)
             }
-
-            Section("Home sections") {
-                ForEach(sectionOrder, id: \.self) { sectionId in
-                    HStack {
-                        Toggle(SectionLayoutPreferences.title(for: sectionId), isOn: visibilityBinding(for: sectionId))
-                        Spacer()
-                        if sectionOrder.first != sectionId {
-                            Button { moveSection(sectionId, offset: -1) } label: {
-                                Image(systemName: "chevron.up")
-                            }
-                            .buttonStyle(.borderless)
-                        }
-                        if sectionOrder.last != sectionId {
-                            Button { moveSection(sectionId, offset: 1) } label: {
-                                Image(systemName: "chevron.down")
-                            }
-                            .buttonStyle(.borderless)
-                        }
-                    }
-                }
+            .onChange(of: launchStrategy) { _, newValue in
+                LaunchStrategyPreferences.strategy = newValue
             }
 
             if let errorMessage {
@@ -59,37 +40,8 @@ struct SettingsView: View {
                 NSApp.terminate(nil)
             }
         }
-        .formStyle(.grouped)
         .padding()
         .frame(width: 420)
-    }
-
-    private func moveSection(_ sectionId: String, offset: Int) {
-        guard let index = sectionOrder.firstIndex(of: sectionId) else { return }
-        let newIndex = index + offset
-        guard sectionOrder.indices.contains(newIndex) else { return }
-        sectionOrder.swapAt(index, newIndex)
-        SectionLayoutPreferences.order = sectionOrder
-    }
-
-    private func favoriteBinding(for appId: String) -> Binding<Bool> {
-        Binding(
-            get: { AppActivityStore.shared.isFavorite(appId: appId) },
-            set: { enabled in
-                if enabled {
-                    AppActivityStore.shared.pinFavorite(appId: appId)
-                } else {
-                    AppActivityStore.shared.unpinFavorite(appId: appId)
-                }
-            }
-        )
-    }
-
-    private func visibilityBinding(for sectionId: String) -> Binding<Bool> {
-        Binding(
-            get: { SectionLayoutPreferences.isVisible(sectionId) },
-            set: { SectionLayoutPreferences.setVisible(sectionId, $0) }
-        )
     }
 
     private func updateLoginItem(enabled: Bool) {
