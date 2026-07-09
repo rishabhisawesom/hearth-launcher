@@ -4,13 +4,14 @@ import CoreNavigation
 import FeatureApplications
 
 struct HomeView: View {
-    private let columns = 4
-    private let apps = CuratedApps.streaming
+    private let sections: [HomeSection]
+    private let tileWidth: CGFloat = 220
 
-    @State private var focusedIndex = 0
+    @State private var focusedSection = 0
+    @State private var focusedTile = 0
 
-    private var gridColumns: [GridItem] {
-        Array(repeating: GridItem(.flexible(), spacing: HearthSpacing.grid), count: columns)
+    init(provider: any HomeSectionProvider = StreamingSectionProvider()) {
+        self.sections = provider.sections
     }
 
     var body: some View {
@@ -19,10 +20,8 @@ struct HomeView: View {
                 .font(HearthTypography.title)
                 .foregroundStyle(HearthColors.textPrimary)
 
-            LazyVGrid(columns: gridColumns, spacing: HearthSpacing.grid) {
-                ForEach(apps.indices, id: \.self) { index in
-                    TileView(title: apps[index].name, isFocused: index == focusedIndex)
-                }
+            ForEach(sections.indices, id: \.self) { sectionIndex in
+                sectionView(sections[sectionIndex], sectionIndex: sectionIndex)
             }
         }
         .padding(HearthSpacing.screenPadding)
@@ -36,19 +35,45 @@ struct HomeView: View {
         .onKeyPress(.return) { launchFocused(); return .handled }
     }
 
+    @ViewBuilder
+    private func sectionView(_ section: HomeSection, sectionIndex: Int) -> some View {
+        VStack(alignment: .leading, spacing: HearthSpacing.grid) {
+            Text(section.title)
+                .font(HearthTypography.body)
+                .foregroundStyle(HearthColors.textSecondary)
+
+            ScrollView(.horizontal, showsIndicators: false) {
+                LazyHStack(spacing: HearthSpacing.grid) {
+                    ForEach(section.tiles.indices, id: \.self) { tileIndex in
+                        TileView(
+                            title: section.tiles[tileIndex].title,
+                            isFocused: sectionIndex == focusedSection && tileIndex == focusedTile
+                        )
+                        .frame(width: tileWidth)
+                    }
+                }
+            }
+        }
+    }
+
     private func move(_ direction: FocusDirection) {
-        focusedIndex = FocusGrid.moved(
-            from: focusedIndex,
-            columns: columns,
-            itemCount: apps.count,
+        let itemCounts = sections.map(\.tiles.count)
+        let next = FocusSections.moved(
+            section: focusedSection,
+            tile: focusedTile,
+            itemCounts: itemCounts,
             direction: direction
         )
+        focusedSection = next.section
+        focusedTile = next.tile
     }
 
     @MainActor
     private func launchFocused() {
-        guard apps.indices.contains(focusedIndex) else { return }
-        _ = AppLauncher.launch(apps[focusedIndex])
+        guard sections.indices.contains(focusedSection) else { return }
+        let tiles = sections[focusedSection].tiles
+        guard tiles.indices.contains(focusedTile), let app = tiles[focusedTile].app else { return }
+        _ = AppLauncher.launch(app)
     }
 }
 
