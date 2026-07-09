@@ -96,3 +96,11 @@ Run on real hardware before closing M1:
 6. **Quit Hearth** exits cleanly
 
 Record results in Linear **RIS-45**.
+
+## Themes & wallpaper (M4)
+
+**Theme** (Settings → Theme): Dark (default), Light, OLED Dark (true black).
+
+**Wallpaper** (Settings → Wallpaper): Solid or Gradient (blurred theme-colored gradient behind tiles). Changes apply immediately when Settings closes.
+
+External image APIs (Unsplash/Pexels) and parallax motion are deferred.
