@@ -18,15 +18,27 @@ struct RootView: View {
             }
 
             if let streamingApp {
-                StreamingShellView(app: streamingApp) {
-                    self.streamingApp = nil
-                }
-                .environment(\.hearthPalette, theme.palette)
+                streamingExperience(for: streamingApp)
+                    .environment(\.hearthPalette, theme.palette)
             }
         }
         .onReceive(NotificationCenter.default.publisher(for: PreferencesDidChange.notification)) { _ in
             theme = ThemePreferences.theme
             wallpaper = WallpaperPreferences.style
+        }
+    }
+
+    @ViewBuilder
+    private func streamingExperience(for app: CuratedApp) -> some View {
+        switch InAppStreaming.experienceKind(for: app.id) {
+        case .nativeBrowse:
+            PrimeExperienceView(app: app) {
+                streamingApp = nil
+            }
+        case .webShell:
+            StreamingShellView(app: app) {
+                streamingApp = nil
+            }
         }
     }
 }

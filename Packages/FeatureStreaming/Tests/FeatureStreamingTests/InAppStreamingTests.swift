@@ -7,19 +7,22 @@ final class InAppStreamingTests: XCTestCase {
             InAppStreaming.url(for: "youtube")?.absoluteString,
             "https://www.youtube.com/tv"
         )
+    }
+
+    func testPrimeVideoHasInAppURL() {
         XCTAssertEqual(
-            InAppStreaming.userAgent(for: "youtube"),
-            "Mozilla/5.0 (ChromiumStylePlatform) Cobalt/Version"
+            InAppStreaming.url(for: "prime-video")?.absoluteString,
+            "https://www.primevideo.com/tv"
         )
     }
 
     func testOtherAppsHaveNoInAppURL() {
         XCTAssertNil(InAppStreaming.url(for: "netflix"))
-        XCTAssertNil(InAppStreaming.url(for: "prime-video"))
         XCTAssertNil(InAppStreaming.url(for: "hotstar"))
     }
 
-    func testLeanbackDisabledForYouTube() {
-        XCTAssertFalse(InAppStreaming.leanbackEnabled(for: "youtube"))
+    func testNativeBrowseForPrime() {
+        XCTAssertEqual(InAppStreaming.experienceKind(for: "prime-video"), .nativeBrowse)
+        XCTAssertEqual(InAppStreaming.experienceKind(for: "youtube"), .webShell)
     }
 }

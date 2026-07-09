@@ -1,17 +1,22 @@
 import Foundation
 
+public enum StreamingExperienceKind: Sendable {
+    case webShell
+    case nativeBrowse
+}
+
 public enum InAppStreaming {
     public static func url(for appId: String) -> URL? {
         switch appId {
         case "youtube":
-            // ponytail: TV leanback UI; may redirect or block on some UAs — fallback is external launch
             URL(string: "https://www.youtube.com/tv")
+        case "prime-video":
+            URL(string: "https://www.primevideo.com/tv")
         default:
             nil
         }
     }
 
-    /// User-agent hint for leanback web apps that gate on device type.
     public static func userAgent(for appId: String) -> String? {
         switch appId {
         case "youtube":
@@ -21,8 +26,16 @@ public enum InAppStreaming {
         }
     }
 
-    /// Whether to inject spatial D-pad navigation into the web shell.
     public static func leanbackEnabled(for appId: String) -> Bool {
         false
+    }
+
+    public static func experienceKind(for appId: String) -> StreamingExperienceKind {
+        switch appId {
+        case "prime-video":
+            .nativeBrowse
+        default:
+            .webShell
+        }
     }
 }

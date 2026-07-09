@@ -1,0 +1,39 @@
+{
+  "rows": [
+    {
+      "title": "Trending now",
+      "tiles": [
+        {
+          "title": "Raakh - Season 1",
+          "detailURL": "https://www.primevideo.com/detail/0FB3Z6GESMKM5UFHF6QNBGVVOU?ref=atv_hm",
+          "posterURL": "https://images-eu.ssl-images-amazon.com/images/S/pv-target-images/raakh_SX624_FMjpg_.jpg"
+        },
+        {
+          "title": "The Boys - Season 4",
+          "detailURL": "https://www.primevideo.com/detail/0KAJ123?ref=atv_hm",
+          "posterURL": "https://images-eu.ssl-images-amazon.com/images/S/pv-target-images/boys_SX899_FMjpg_.jpg"
+        },
+        {
+          "title": "Reacher - Season 3",
+          "detailURL": "https://www.primevideo.com/detail/0KAJ456",
+          "posterURL": "https://images-eu.ssl-images-amazon.com/images/S/pv-target-images/reacher_SX624_FMjpg_.jpg"
+        }
+      ]
+    },
+    {
+      "title": "Recently added",
+      "tiles": [
+        {
+          "title": "Invincible - Season 3",
+          "detailURL": "https://www.primevideo.com/detail/0KAJABC",
+          "posterURL": "https://images-eu.ssl-images-amazon.com/images/S/pv-target-images/invincible_SX624_FMjpg_.jpg"
+        },
+        {
+          "title": "Fallout - Season 1",
+          "detailURL": "https://www.primevideo.com/detail/0KAJ789",
+          "posterURL": "https://images-eu.ssl-images-amazon.com/images/S/pv-target-images/fallout_SX624_FMjpg_.jpg"
+        }
+      ]
+    }
+  ]
+}

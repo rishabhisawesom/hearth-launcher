@@ -133,6 +133,22 @@ Selecting **YouTube** opens `youtube.com/tv` inside Hearth (fullscreen web view)
 
 **Returning home:** **Esc** or **Backspace** moves focus to the **Back** button (orange outline). Press **Return** on Back, or **Esc** again, to exit to the home grid. **↓** from Back re-enters the YouTube UI.
 
+### In-app Prime Video (native browse)
+
+Selecting **Prime Video** opens a **native SwiftUI browse UI** instead of the raw web shell. A **visible** WKWebView loads `primevideo.com/tv` first so you can sign in; catalog rows are harvested from Prime API JSON **and** from rendered card DOM (`article[data-testid="card"]` with JPEG posters and `/detail/` links). DOM-scraped tiles take priority over JSON when both are present.
+
+**Login once:** Sign in in the in-app web view when prompted. Prime cookies persist in the default WKWebsiteDataStore between sessions.
+
+**Navigation:** Arrow keys move across poster tiles; **Return** opens the title detail page in a fullscreen WKWebView overlay.
+
+**Poster images:** Drop PNG files into `~/Library/Application Support/Hearth/posters/prime/`.
+
+**Returning home:** Click **Back**, or focus **Back** and press **Return** / **Esc**.
+
+**Limitations:** Catalog parser is heuristic; after **15 seconds** without parsed rows, demo rows appear. Personal use only — not Amazon's real TV app.
+
+YouTube uses the in-app **web shell**. Prime uses native browse (`PrimeExperienceView`).
+
 ## Themes & wallpaper (M4)
 
 **Theme** (Settings → Theme): Dark (default), Light, OLED Dark (true black).
