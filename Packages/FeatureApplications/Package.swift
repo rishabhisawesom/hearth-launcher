@@ -8,10 +8,7 @@ let package = Package(
         .library(name: "FeatureApplications", targets: ["FeatureApplications"]),
     ],
     targets: [
-        .target(
-            name: "FeatureApplications",
-            linkerSettings: [.linkedFramework("SwiftData")]
-        ),
+        .target(name: "FeatureApplications"),
         .testTarget(name: "FeatureApplicationsTests", dependencies: ["FeatureApplications"]),
     ]
 )

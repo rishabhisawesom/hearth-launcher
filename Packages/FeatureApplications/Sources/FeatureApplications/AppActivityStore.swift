@@ -1,104 +1,102 @@
 import Foundation
-import SwiftData
 
-@Model
-public final class FavoriteApp {
-    @Attribute(.unique) public var appId: String
-    public var pinnedAt: Date
+// ponytail: JSON file persistence instead of SwiftData — builds with Command Line Tools (no macro plugin)
 
-    public init(appId: String, pinnedAt: Date = .now) {
-        self.appId = appId
-        self.pinnedAt = pinnedAt
-    }
+private struct FavoriteEntry: Codable, Equatable {
+    let appId: String
+    let pinnedAt: Date
 }
 
-@Model
-public final class RecentApp {
-    @Attribute(.unique) public var appId: String
-    public var lastLaunchedAt: Date
+private struct RecentEntry: Codable, Equatable {
+    let appId: String
+    var lastLaunchedAt: Date
+}
 
-    public init(appId: String, lastLaunchedAt: Date = .now) {
-        self.appId = appId
-        self.lastLaunchedAt = lastLaunchedAt
-    }
+private struct AppActivityData: Codable, Equatable {
+    var favorites: [FavoriteEntry]
+    var recents: [RecentEntry]
 }
 
 @MainActor
 public final class AppActivityStore {
     public static let shared = AppActivityStore()
 
-    private let container: ModelContainer
-    private var context: ModelContext { container.mainContext }
+    private let fileURL: URL?
+    private var data: AppActivityData
 
     // ponytail: fixed cap; bump or make configurable when recents UI ships (RIS-54)
     private let maxRecentCount = 20
 
     public init(inMemory: Bool = false) {
-        let schema = Schema([FavoriteApp.self, RecentApp.self])
-        let config = ModelConfiguration(isStoredInMemoryOnly: inMemory)
-        do {
-            container = try ModelContainer(for: schema, configurations: config)
-        } catch {
-            fatalError("AppActivityStore init failed: \(error)")
+        if inMemory {
+            fileURL = nil
+            data = AppActivityData(favorites: [], recents: [])
+        } else {
+            let url = Self.defaultFileURL()
+            fileURL = url
+            data = Self.load(from: url) ?? AppActivityData(favorites: [], recents: [])
         }
     }
 
     public func pinFavorite(appId: String, at date: Date = .now) {
-        let appId = appId
-        let descriptor = FetchDescriptor<FavoriteApp>(predicate: #Predicate<FavoriteApp> { $0.appId == appId })
-        guard (try? context.fetch(descriptor).first) == nil else { return }
-        context.insert(FavoriteApp(appId: appId, pinnedAt: date))
-        try? context.save()
+        guard !data.favorites.contains(where: { $0.appId == appId }) else { return }
+        data.favorites.append(FavoriteEntry(appId: appId, pinnedAt: date))
+        data.favorites.sort { $0.pinnedAt < $1.pinnedAt }
+        persist()
     }
 
     public func unpinFavorite(appId: String) {
-        let appId = appId
-        let descriptor = FetchDescriptor<FavoriteApp>(predicate: #Predicate<FavoriteApp> { $0.appId == appId })
-        guard let existing = try? context.fetch(descriptor).first else { return }
-        context.delete(existing)
-        try? context.save()
+        data.favorites.removeAll { $0.appId == appId }
+        persist()
     }
 
     public func isFavorite(appId: String) -> Bool {
-        let appId = appId
-        let descriptor = FetchDescriptor<FavoriteApp>(predicate: #Predicate<FavoriteApp> { $0.appId == appId })
-        return (try? context.fetch(descriptor).first) != nil
+        data.favorites.contains { $0.appId == appId }
     }
 
     public func favoriteAppIds() -> [String] {
-        let descriptor = FetchDescriptor<FavoriteApp>(
-            sortBy: [SortDescriptor(\FavoriteApp.pinnedAt, order: .forward)]
-        )
-        return (try? context.fetch(descriptor))?.map { $0.appId } ?? []
+        data.favorites.map(\.appId)
     }
 
     public func recordLaunch(appId: String, at date: Date = .now) {
-        let appId = appId
-        let descriptor = FetchDescriptor<RecentApp>(predicate: #Predicate<RecentApp> { $0.appId == appId })
-        if let existing = try? context.fetch(descriptor).first {
-            existing.lastLaunchedAt = date
+        if let index = data.recents.firstIndex(where: { $0.appId == appId }) {
+            data.recents[index].lastLaunchedAt = date
         } else {
-            context.insert(RecentApp(appId: appId, lastLaunchedAt: date))
+            data.recents.append(RecentEntry(appId: appId, lastLaunchedAt: date))
         }
-        try? context.save()
+        data.recents.sort { $0.lastLaunchedAt > $1.lastLaunchedAt }
         trimRecents()
+        persist()
     }
 
     public func recentAppIds() -> [String] {
-        let descriptor = FetchDescriptor<RecentApp>(
-            sortBy: [SortDescriptor(\RecentApp.lastLaunchedAt, order: .reverse)]
-        )
-        return (try? context.fetch(descriptor))?.map { $0.appId } ?? []
+        data.recents.map(\.appId)
     }
 
     private func trimRecents() {
-        var descriptor = FetchDescriptor<RecentApp>(
-            sortBy: [SortDescriptor(\RecentApp.lastLaunchedAt, order: .reverse)]
-        )
-        guard let all = try? context.fetch(descriptor), all.count > maxRecentCount else { return }
-        for item in all.dropFirst(maxRecentCount) {
-            context.delete(item)
-        }
-        try? context.save()
+        guard data.recents.count > maxRecentCount else { return }
+        data.recents = Array(data.recents.prefix(maxRecentCount))
+    }
+
+    private func persist() {
+        guard let fileURL else { return }
+        Self.save(data, to: fileURL)
+    }
+
+    private static func defaultFileURL() -> URL {
+        let base = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask).first!
+        let dir = base.appendingPathComponent("Hearth", isDirectory: true)
+        try? FileManager.default.createDirectory(at: dir, withIntermediateDirectories: true)
+        return dir.appendingPathComponent("app-activity.json")
+    }
+
+    private static func load(from url: URL) -> AppActivityData? {
+        guard let bytes = try? Data(contentsOf: url) else { return nil }
+        return try? JSONDecoder().decode(AppActivityData.self, from: bytes)
+    }
+
+    private static func save(_ data: AppActivityData, to url: URL) {
+        guard let bytes = try? JSONEncoder().encode(data) else { return }
+        try? bytes.write(to: url, options: .atomic)
     }
 }
