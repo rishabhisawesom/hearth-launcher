@@ -122,9 +122,7 @@ Hearth ships four streaming tiles: Netflix, Prime Video, YouTube, and Hotstar.
 
 **Return to Hearth after streaming:** Not automated yet — use **⌘,** → Quit Hearth, or switch back with the keyboard/remote when the browser app closes.
 
-## Search, themes & wallpaper (M4)
-
-**Global search** — **⌘K** opens the overlay. Type to filter the four streaming apps; **↑/↓** move selection, **Return** launches, **Esc** closes.
+## Themes & wallpaper (M4)
 
 **Theme** (Settings → Theme): Dark (default), Light, OLED Dark (true black).
 

@@ -4,8 +4,6 @@ import CoreNavigation
 import FeatureApplications
 
 struct HomeView: View {
-    @Binding var searchPresented: Bool
-
     @Environment(\.hearthPalette) private var palette
 
     private let apps = CuratedApps.streaming
@@ -53,11 +51,6 @@ struct HomeView: View {
         .onKeyPress(.upArrow) { move(.up); return .handled }
         .onKeyPress(.downArrow) { move(.down); return .handled }
         .onKeyPress(.return) { launchFocused(); return .handled }
-        .background {
-            Button("Search") { searchPresented = true }
-                .keyboardShortcut("k", modifiers: .command)
-                .hidden()
-        }
     }
 
     private func move(_ direction: FocusDirection) {
