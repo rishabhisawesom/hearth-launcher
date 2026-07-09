@@ -20,18 +20,28 @@ final class CoreNavigationTests: XCTestCase {
 
     func testFocusSectionsMovesWithinRow() {
         let counts = [4, 3]
-        XCTAssertEqual(FocusSections.moved(section: 0, tile: 1, itemCounts: counts, direction: .right), (0, 2))
-        XCTAssertEqual(FocusSections.moved(section: 0, tile: 1, itemCounts: counts, direction: .left), (0, 0))
+        var result = FocusSections.moved(section: 0, tile: 1, itemCounts: counts, direction: .right)
+        XCTAssertEqual(result.section, 0)
+        XCTAssertEqual(result.tile, 2)
+        result = FocusSections.moved(section: 0, tile: 1, itemCounts: counts, direction: .left)
+        XCTAssertEqual(result.section, 0)
+        XCTAssertEqual(result.tile, 0)
     }
 
     func testFocusSectionsMovesBetweenSections() {
         let counts = [4, 3]
-        XCTAssertEqual(FocusSections.moved(section: 0, tile: 2, itemCounts: counts, direction: .down), (1, 2))
-        XCTAssertEqual(FocusSections.moved(section: 1, tile: 2, itemCounts: counts, direction: .up), (0, 2))
+        var result = FocusSections.moved(section: 0, tile: 2, itemCounts: counts, direction: .down)
+        XCTAssertEqual(result.section, 1)
+        XCTAssertEqual(result.tile, 2)
+        result = FocusSections.moved(section: 1, tile: 2, itemCounts: counts, direction: .up)
+        XCTAssertEqual(result.section, 0)
+        XCTAssertEqual(result.tile, 2)
     }
 
     func testFocusSectionsClampsColumnAcrossSections() {
         let counts = [4, 2]
-        XCTAssertEqual(FocusSections.moved(section: 0, tile: 3, itemCounts: counts, direction: .down), (1, 1))
+        let result = FocusSections.moved(section: 0, tile: 3, itemCounts: counts, direction: .down)
+        XCTAssertEqual(result.section, 1)
+        XCTAssertEqual(result.tile, 1)
     }
 }
