@@ -50,8 +50,11 @@ struct HomeView: View {
                             isFocused: sectionIndex == focusedSection && tileIndex == focusedTile
                         )
                         .frame(width: tileWidth)
+                        .padding(HearthSpacing.focusOverflow)
+                        .id(tileIndex)
                     }
                 }
+                .padding(.horizontal, HearthSpacing.focusOverflow)
             }
         }
     }
@@ -92,7 +95,6 @@ private struct TileView: View {
                 RoundedRectangle(cornerRadius: HearthRadius.tile)
                     .strokeBorder(isFocused ? HearthColors.accent : .clear, lineWidth: 4)
             }
-            .scaleEffect(isFocused ? 1.05 : 1.0)
             .animation(.easeOut(duration: 0.15), value: isFocused)
     }
 }
