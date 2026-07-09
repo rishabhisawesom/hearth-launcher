@@ -1,18 +1,15 @@
+import AppKit
 import SwiftUI
 import CoreUI
 import CoreNavigation
 import FeatureApplications
 
 struct HomeView: View {
-    private let sections: [HomeSection]
     private let tileWidth: CGFloat = 220
 
+    @State private var sections: [HomeSection] = []
     @State private var focusedSection = 0
     @State private var focusedTile = 0
-
-    init(provider: any HomeSectionProvider = StreamingSectionProvider()) {
-        self.sections = provider.sections
-    }
 
     var body: some View {
         VStack(alignment: .leading, spacing: HearthSpacing.section) {
@@ -28,6 +25,10 @@ struct HomeView: View {
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
         .background(HearthColors.background)
         .focusable()
+        .onAppear { reloadSections() }
+        .onReceive(NotificationCenter.default.publisher(for: NSApplication.didBecomeActiveNotification)) { _ in
+            reloadSections()
+        }
         .onKeyPress(.leftArrow) { move(.left); return .handled }
         .onKeyPress(.rightArrow) { move(.right); return .handled }
         .onKeyPress(.upArrow) { move(.up); return .handled }
@@ -60,6 +61,13 @@ struct HomeView: View {
         }
     }
 
+    private func reloadSections() {
+        sections = HomeSectionsBuilder.build()
+        focusedSection = min(focusedSection, max(sections.count - 1, 0))
+        let tileCount = sections.indices.contains(focusedSection) ? sections[focusedSection].tiles.count : 0
+        focusedTile = min(focusedTile, max(tileCount - 1, 0))
+    }
+
     private func move(_ direction: FocusDirection) {
         let itemCounts = sections.map(\.tiles.count)
         let next = FocusSections.moved(
@@ -77,7 +85,9 @@ struct HomeView: View {
         guard sections.indices.contains(focusedSection) else { return }
         let tiles = sections[focusedSection].tiles
         guard tiles.indices.contains(focusedTile), let app = tiles[focusedTile].app else { return }
-        _ = AppLauncher.launch(app)
+        if AppLauncher.launch(app) {
+            reloadSections()
+        }
     }
 }
 
