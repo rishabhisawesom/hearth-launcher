@@ -121,3 +121,13 @@ Hearth ships four streaming tiles: Netflix, Prime Video, YouTube, and Hotstar.
 **PWA / Safari profile:** For a dedicated living-room browser profile, create a macOS user or Safari profile manually and set it as the default browser. Automated profile wizard is deferred.
 
 **Return to Hearth after streaming:** Not automated yet — use **⌘,** → Quit Hearth, or switch back with the keyboard/remote when the browser app closes.
+
+## Search, themes & wallpaper (M4)
+
+**Global search** — **⌘K** opens the overlay. Type to filter the four streaming apps; **↑/↓** move selection, **Return** launches, **Esc** closes.
+
+**Theme** (Settings → Theme): Dark (default), Light, OLED Dark (true black).
+
+**Wallpaper** (Settings → Wallpaper): Solid or Gradient (blurred theme-colored gradient behind tiles). Changes apply immediately when Settings closes.
+
+External image APIs (Unsplash/Pexels) and parallax motion are deferred.

@@ -4,6 +4,10 @@ import CoreNavigation
 import FeatureApplications
 
 struct HomeView: View {
+    @Binding var searchPresented: Bool
+
+    @Environment(\.hearthPalette) private var palette
+
     private let apps = CuratedApps.streaming
     private let columns = 2
 
@@ -25,7 +29,7 @@ struct HomeView: View {
             VStack(alignment: .leading, spacing: HearthSpacing.section) {
                 Text("Hearth")
                     .font(HearthTypography.title)
-                    .foregroundStyle(HearthColors.textPrimary)
+                    .foregroundStyle(palette.textPrimary)
 
                 LazyVGrid(columns: gridColumns, spacing: gap) {
                     ForEach(apps.indices, id: \.self) { index in
@@ -42,13 +46,18 @@ struct HomeView: View {
             .padding(pad)
             .frame(width: proxy.size.width, height: proxy.size.height, alignment: .topLeading)
         }
-        .background(HearthColors.background)
+        .background(.clear)
         .focusable()
         .onKeyPress(.leftArrow) { move(.left); return .handled }
         .onKeyPress(.rightArrow) { move(.right); return .handled }
         .onKeyPress(.upArrow) { move(.up); return .handled }
         .onKeyPress(.downArrow) { move(.down); return .handled }
         .onKeyPress(.return) { launchFocused(); return .handled }
+        .background {
+            Button("Search") { searchPresented = true }
+                .keyboardShortcut("k", modifiers: .command)
+                .hidden()
+        }
     }
 
     private func move(_ direction: FocusDirection) {
@@ -68,6 +77,8 @@ struct HomeView: View {
 }
 
 private struct TileView: View {
+    @Environment(\.hearthPalette) private var palette
+
     let title: String
     let app: CuratedApp
     let isFocused: Bool
@@ -78,17 +89,17 @@ private struct TileView: View {
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
             Text(title)
                 .font(HearthTypography.title)
-                .foregroundStyle(HearthColors.textPrimary)
+                .foregroundStyle(palette.textPrimary)
                 .lineLimit(1)
                 .minimumScaleFactor(0.6)
         }
         .padding(HearthSpacing.grid)
         .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .background(HearthColors.surface)
+        .background(palette.surface)
         .clipShape(RoundedRectangle(cornerRadius: HearthRadius.tile))
         .overlay {
             RoundedRectangle(cornerRadius: HearthRadius.tile)
-                .strokeBorder(isFocused ? HearthColors.accent : .clear, lineWidth: 4)
+                .strokeBorder(isFocused ? palette.accent : .clear, lineWidth: 4)
         }
         .animation(.easeOut(duration: 0.15), value: isFocused)
     }
@@ -103,7 +114,7 @@ private struct TileView: View {
         } else {
             Image(systemName: AppIconProvider.fallbackSymbolName)
                 .font(.system(size: 72))
-                .foregroundStyle(HearthColors.textSecondary)
+                .foregroundStyle(palette.textSecondary)
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
         }
     }
