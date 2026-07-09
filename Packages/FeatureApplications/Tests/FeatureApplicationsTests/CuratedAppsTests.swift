@@ -10,4 +10,9 @@ final class CuratedAppsTests: XCTestCase {
             "Hotstar",
         ])
     }
+
+    func testLaunchURLFallsBackToWeb() {
+        let app = CuratedApps.streaming[0]
+        XCTAssertEqual(app.launchURL(), app.webURL)
+    }
 }
