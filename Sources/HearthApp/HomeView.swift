@@ -2,13 +2,16 @@ import SwiftUI
 import CoreUI
 import CoreNavigation
 import FeatureApplications
+import FeatureStreaming
 
 struct HomeView: View {
+    @Binding var streamingApp: CuratedApp?
     @Environment(\.hearthPalette) private var palette
 
     private let apps = CuratedApps.streaming
     private let columns = 2
 
+    @FocusState private var gridFocused: Bool
     @State private var focusedIndex = 0
 
     private var gridColumns: [GridItem] {
@@ -46,6 +49,11 @@ struct HomeView: View {
         }
         .background(.clear)
         .focusable()
+        .focused($gridFocused)
+        .onAppear {
+            // ponytail: defer until streaming WKWebView relinquishes AppKit first responder
+            DispatchQueue.main.async { gridFocused = true }
+        }
         .onKeyPress(.leftArrow) { move(.left); return .handled }
         .onKeyPress(.rightArrow) { move(.right); return .handled }
         .onKeyPress(.upArrow) { move(.up); return .handled }
@@ -65,7 +73,13 @@ struct HomeView: View {
     @MainActor
     private func launchFocused() {
         guard apps.indices.contains(focusedIndex) else { return }
-        _ = AppLauncher.launch(apps[focusedIndex])
+        let app = apps[focusedIndex]
+        if InAppStreaming.url(for: app.id) != nil {
+            AppActivityStore.shared.recordLaunch(appId: app.id)
+            streamingApp = app
+        } else {
+            _ = AppLauncher.launch(app)
+        }
     }
 }
 

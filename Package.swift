@@ -13,6 +13,7 @@ let package = Package(
         .package(path: "Packages/CoreSystem"),
         .package(path: "Packages/RemoteProtocol"),
         .package(path: "Packages/FeatureApplications"),
+        .package(path: "Packages/FeatureStreaming"),
     ],
     targets: [
         .executableTarget(
@@ -23,6 +24,7 @@ let package = Package(
                 "CoreSystem",
                 "RemoteProtocol",
                 "FeatureApplications",
+                "FeatureStreaming",
             ]
         ),
     ]

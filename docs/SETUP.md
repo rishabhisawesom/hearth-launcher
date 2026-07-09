@@ -125,7 +125,13 @@ Hearth ships four streaming tiles: Netflix, Prime Video, YouTube, and Hotstar.
 
 **PWA / Safari profile:** For a dedicated living-room browser profile, create a macOS user or Safari profile manually and set it as the default browser. Automated profile wizard is deferred.
 
-**Return to Hearth after streaming:** Not automated yet — use **⌘,** → Quit Hearth, or switch back with the keyboard/remote when the browser app closes.
+**Return to Hearth after streaming:** For YouTube, press **Esc** or **Back** to return to the home grid. Other services open externally — use **⌘,** → Quit Hearth, or switch back when the native app or browser closes.
+
+### In-app YouTube (TV web shell)
+
+Selecting **YouTube** opens `youtube.com/tv` inside Hearth (fullscreen web view) instead of the native app or browser. Arrow keys and Return are handled by the YouTube TV page once it loads.
+
+**Returning home:** **Esc** or **Backspace** moves focus to the **Back** button (orange outline). Press **Return** on Back, or **Esc** again, to exit to the home grid. **↓** from Back re-enters the YouTube UI.
 
 ## Themes & wallpaper (M4)
 
