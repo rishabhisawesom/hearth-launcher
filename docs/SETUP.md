@@ -102,3 +102,27 @@ Record results in Linear **RIS-45**.
 The home screen is a fullscreen **2×2 grid** of curated streaming tiles: Netflix, Prime Video, YouTube, and Hotstar. Arrow keys move focus; **Return** launches the focused tile (native app when installed, otherwise the service website).
 
 Recent launches are recorded in `~/Library/Application Support/Hearth/app-activity.json`.
+
+## M2 performance smoke
+
+On Mac mini hardware with the home screen open:
+
+1. Arrow through all four tiles — focus should update instantly with no visible stutter
+2. Optional: Instruments → Time Profiler while navigating; target 60 FPS sustained
+
+Record results in Linear **RIS-65**.
+
+## Streaming launch (M3)
+
+Hearth ships four streaming tiles: Netflix, Prime Video, YouTube, and Hotstar.
+
+**Launch behavior** (Settings → Streaming launch):
+
+| Mode | Behavior |
+|------|----------|
+| Prefer app, else browser | Opens the native `.app` if installed in `/Applications`, otherwise the service website |
+| Browser only | Always opens the website in your default browser |
+
+**PWA / Safari profile:** For a dedicated living-room browser profile, create a macOS user or Safari profile manually and set it as the default browser. Automated profile wizard is deferred.
+
+**Return to Hearth after streaming:** Not automated yet — use **⌘,** → Quit Hearth, or switch back with the keyboard/remote when the browser app closes.
