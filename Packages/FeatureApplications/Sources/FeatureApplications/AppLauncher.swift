@@ -3,7 +3,10 @@ import AppKit
 public enum AppLauncher {
     @MainActor
     public static func launch(_ app: CuratedApp) -> Bool {
-        guard let url = app.resolveURL() else { return false }
-        return NSWorkspace.shared.open(url)
+        let success = NSWorkspace.shared.open(app.launchURL())
+        if success {
+            AppActivityStore.shared.recordLaunch(appId: app.id)
+        }
+        return success
     }
 }

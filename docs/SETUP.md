@@ -96,3 +96,9 @@ Run on real hardware before closing M1:
 6. **Quit Hearth** exits cleanly
 
 Record results in Linear **RIS-45**.
+
+## Home grid (M2)
+
+The home screen is a fullscreen **2×2 grid** of curated streaming tiles: Netflix, Prime Video, YouTube, and Hotstar. Arrow keys move focus; **Return** launches the focused tile (native app when installed, otherwise the service website).
+
+Recent launches are recorded in `~/Library/Application Support/Hearth/app-activity.json`.

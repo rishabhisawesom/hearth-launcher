@@ -4,28 +4,44 @@ import CoreNavigation
 import FeatureApplications
 
 struct HomeView: View {
-    private let sections: [HomeSection]
-    private let tileWidth: CGFloat = 220
+    private let apps = CuratedApps.streaming
+    private let columns = 2
 
-    @State private var focusedSection = 0
-    @State private var focusedTile = 0
+    @State private var focusedIndex = 0
 
-    init(provider: any HomeSectionProvider = StreamingSectionProvider()) {
-        self.sections = provider.sections
+    private var gridColumns: [GridItem] {
+        Array(repeating: GridItem(.flexible(), spacing: HearthSpacing.grid), count: columns)
     }
 
     var body: some View {
-        VStack(alignment: .leading, spacing: HearthSpacing.section) {
-            Text("Hearth")
-                .font(HearthTypography.title)
-                .foregroundStyle(HearthColors.textPrimary)
+        GeometryReader { proxy in
+            let pad = HearthSpacing.screenPadding
+            let gap = HearthSpacing.grid
+            let headerHeight: CGFloat = 72
+            let gridHeight = proxy.size.height - pad * 2 - headerHeight - HearthSpacing.section
+            let tileWidth = (proxy.size.width - pad * 2 - gap) / CGFloat(columns)
+            let tileHeight = (gridHeight - gap) / CGFloat(columns)
 
-            ForEach(sections.indices, id: \.self) { sectionIndex in
-                sectionView(sections[sectionIndex], sectionIndex: sectionIndex)
+            VStack(alignment: .leading, spacing: HearthSpacing.section) {
+                Text("Hearth")
+                    .font(HearthTypography.title)
+                    .foregroundStyle(HearthColors.textPrimary)
+
+                LazyVGrid(columns: gridColumns, spacing: gap) {
+                    ForEach(apps.indices, id: \.self) { index in
+                        TileView(
+                            title: apps[index].name,
+                            app: apps[index],
+                            isFocused: index == focusedIndex
+                        )
+                        .frame(width: tileWidth, height: tileHeight)
+                        .padding(HearthSpacing.focusOverflow)
+                    }
+                }
             }
+            .padding(pad)
+            .frame(width: proxy.size.width, height: proxy.size.height, alignment: .topLeading)
         }
-        .padding(HearthSpacing.screenPadding)
-        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
         .background(HearthColors.background)
         .focusable()
         .onKeyPress(.leftArrow) { move(.left); return .handled }
@@ -35,69 +51,39 @@ struct HomeView: View {
         .onKeyPress(.return) { launchFocused(); return .handled }
     }
 
-    @ViewBuilder
-    private func sectionView(_ section: HomeSection, sectionIndex: Int) -> some View {
-        VStack(alignment: .leading, spacing: HearthSpacing.grid) {
-            Text(section.title)
-                .font(HearthTypography.body)
-                .foregroundStyle(HearthColors.textSecondary)
-
-            ScrollView(.horizontal, showsIndicators: false) {
-                LazyHStack(spacing: HearthSpacing.grid) {
-                    ForEach(section.tiles.indices, id: \.self) { tileIndex in
-                        TileView(
-                            title: section.tiles[tileIndex].title,
-                            app: section.tiles[tileIndex].app,
-                            isFocused: sectionIndex == focusedSection && tileIndex == focusedTile
-                        )
-                        .frame(width: tileWidth)
-                        .padding(HearthSpacing.focusOverflow)
-                        .id(tileIndex)
-                    }
-                }
-                .padding(.horizontal, HearthSpacing.focusOverflow)
-            }
-        }
-    }
-
     private func move(_ direction: FocusDirection) {
-        let itemCounts = sections.map(\.tiles.count)
-        let next = FocusSections.moved(
-            section: focusedSection,
-            tile: focusedTile,
-            itemCounts: itemCounts,
+        focusedIndex = FocusGrid.moved(
+            from: focusedIndex,
+            columns: columns,
+            itemCount: apps.count,
             direction: direction
         )
-        focusedSection = next.section
-        focusedTile = next.tile
     }
 
     @MainActor
     private func launchFocused() {
-        guard sections.indices.contains(focusedSection) else { return }
-        let tiles = sections[focusedSection].tiles
-        guard tiles.indices.contains(focusedTile), let app = tiles[focusedTile].app else { return }
-        _ = AppLauncher.launch(app)
+        guard apps.indices.contains(focusedIndex) else { return }
+        _ = AppLauncher.launch(apps[focusedIndex])
     }
 }
 
 private struct TileView: View {
     let title: String
-    let app: CuratedApp?
+    let app: CuratedApp
     let isFocused: Bool
 
-    private let iconDisplaySize: CGFloat = 64
-
     var body: some View {
-        VStack(spacing: HearthSpacing.grid / 2) {
+        VStack(spacing: HearthSpacing.grid) {
             tileIcon
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
             Text(title)
-                .font(HearthTypography.body)
+                .font(HearthTypography.title)
                 .foregroundStyle(HearthColors.textPrimary)
                 .lineLimit(1)
+                .minimumScaleFactor(0.6)
         }
-        .frame(maxWidth: .infinity, minHeight: 120)
-        .padding(.vertical, HearthSpacing.grid / 2)
+        .padding(HearthSpacing.grid)
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(HearthColors.surface)
         .clipShape(RoundedRectangle(cornerRadius: HearthRadius.tile))
         .overlay {
@@ -109,16 +95,16 @@ private struct TileView: View {
 
     @ViewBuilder
     private var tileIcon: some View {
-        if let app, let nsImage = AppIconProvider.icon(for: app) {
+        if let nsImage = AppIconProvider.icon(for: app) {
             Image(nsImage: nsImage)
                 .resizable()
                 .aspectRatio(contentMode: .fit)
-                .frame(width: iconDisplaySize, height: iconDisplaySize)
+                .padding(HearthSpacing.grid)
         } else {
             Image(systemName: AppIconProvider.fallbackSymbolName)
-                .font(.system(size: iconDisplaySize * 0.6))
+                .font(.system(size: 72))
                 .foregroundStyle(HearthColors.textSecondary)
-                .frame(width: iconDisplaySize, height: iconDisplaySize)
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
         }
     }
 }
