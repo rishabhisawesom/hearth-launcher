@@ -47,6 +47,7 @@ struct HomeView: View {
                     ForEach(section.tiles.indices, id: \.self) { tileIndex in
                         TileView(
                             title: section.tiles[tileIndex].title,
+                            app: section.tiles[tileIndex].app,
                             isFocused: sectionIndex == focusedSection && tileIndex == focusedTile
                         )
                         .frame(width: tileWidth)
@@ -82,19 +83,42 @@ struct HomeView: View {
 
 private struct TileView: View {
     let title: String
+    let app: CuratedApp?
     let isFocused: Bool
 
+    private let iconDisplaySize: CGFloat = 64
+
     var body: some View {
-        Text(title)
-            .font(HearthTypography.body)
-            .foregroundStyle(HearthColors.textPrimary)
-            .frame(maxWidth: .infinity, minHeight: 120)
-            .background(HearthColors.surface)
-            .clipShape(RoundedRectangle(cornerRadius: HearthRadius.tile))
-            .overlay {
-                RoundedRectangle(cornerRadius: HearthRadius.tile)
-                    .strokeBorder(isFocused ? HearthColors.accent : .clear, lineWidth: 4)
-            }
-            .animation(.easeOut(duration: 0.15), value: isFocused)
+        VStack(spacing: HearthSpacing.grid / 2) {
+            tileIcon
+            Text(title)
+                .font(HearthTypography.body)
+                .foregroundStyle(HearthColors.textPrimary)
+                .lineLimit(1)
+        }
+        .frame(maxWidth: .infinity, minHeight: 120)
+        .padding(.vertical, HearthSpacing.grid / 2)
+        .background(HearthColors.surface)
+        .clipShape(RoundedRectangle(cornerRadius: HearthRadius.tile))
+        .overlay {
+            RoundedRectangle(cornerRadius: HearthRadius.tile)
+                .strokeBorder(isFocused ? HearthColors.accent : .clear, lineWidth: 4)
+        }
+        .animation(.easeOut(duration: 0.15), value: isFocused)
+    }
+
+    @ViewBuilder
+    private var tileIcon: some View {
+        if let app, let nsImage = AppIconProvider.icon(for: app) {
+            Image(nsImage: nsImage)
+                .resizable()
+                .aspectRatio(contentMode: .fit)
+                .frame(width: iconDisplaySize, height: iconDisplaySize)
+        } else {
+            Image(systemName: AppIconProvider.fallbackSymbolName)
+                .font(.system(size: iconDisplaySize * 0.6))
+                .foregroundStyle(HearthColors.textSecondary)
+                .frame(width: iconDisplaySize, height: iconDisplaySize)
+        }
     }
 }
