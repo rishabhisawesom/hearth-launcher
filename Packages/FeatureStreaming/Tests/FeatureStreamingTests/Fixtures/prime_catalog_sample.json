@@ -1,0 +1,58 @@
+{
+  "pageType": "Browse",
+  "containers": [
+    {
+      "title": "Trending now",
+      "items": [
+        {
+          "title": "The Boys",
+          "imageUrl": "https://m.media-amazon.com/images/G/01/theboys.jpg",
+          "detailUrl": "https://www.primevideo.com/detail/0KAJ123"
+        },
+        {
+          "title": "Reacher",
+          "imageUrl": "https://m.media-amazon.com/images/G/01/reacher.jpg",
+          "detailUrl": "https://www.primevideo.com/detail/0KAJ456"
+        },
+        {
+          "title": "Fallout",
+          "imageUrl": "https://m.media-amazon.com/images/G/01/fallout.jpg",
+          "detailUrl": "https://www.primevideo.com/detail/0KAJ789"
+        }
+      ]
+    },
+    {
+      "heading": "Recently added",
+      "cards": [
+        {
+          "displayTitle": "Invincible",
+          "packshot": {
+            "url": "https://m.media-amazon.com/images/G/01/invincible.jpg"
+          },
+          "href": "/detail/0KAJABC"
+        },
+        {
+          "displayTitle": "The Marvelous Mrs. Maisel",
+          "packshot": {
+            "url": "https://m.media-amazon.com/images/G/01/maisel.jpg"
+          },
+          "href": "/detail/0KAJDEF"
+        },
+        {
+          "displayTitle": "Upload",
+          "packshot": {
+            "url": "https://m.media-amazon.com/images/G/01/upload.jpg"
+          },
+          "href": "/detail/0KAJGHI"
+        }
+      ]
+    }
+  ],
+  "orphanTiles": [
+    {
+      "name": "Standalone Movie",
+      "poster": "https://m.media-amazon.com/images/G/01/movie.jpg",
+      "webUrl": "https://www.primevideo.com/detail/0KAJ999"
+    }
+  ]
+}
