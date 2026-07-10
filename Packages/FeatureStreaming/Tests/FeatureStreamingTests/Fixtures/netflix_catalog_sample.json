@@ -1,0 +1,65 @@
+{
+  "lolomo": {
+    "lists": [
+      {
+        "listName": "Trending Now",
+        "items": [
+          {
+            "title": "Stranger Things",
+            "boxart": {
+              "url": "https://occ-0-1234.cdn.netflix.com/boxart/stranger.jpg"
+            },
+            "href": "/watch/80057281"
+          },
+          {
+            "title": "Wednesday",
+            "boxart": {
+              "url": "https://occ-0-1234.cdn.netflix.com/boxart/wednesday.jpg"
+            },
+            "href": "/watch/81231974"
+          },
+          {
+            "title": "Squid Game",
+            "boxart": {
+              "url": "https://occ-0-1234.cdn.netflix.com/boxart/squidgame.jpg"
+            },
+            "href": "/watch/81040344"
+          }
+        ]
+      },
+      {
+        "genre": "New on Netflix",
+        "videos": [
+          {
+            "displayTitle": "The Crown",
+            "artwork": {
+              "url": "https://occ-0-1234.cdn.netflix.com/boxart/crown.jpg"
+            },
+            "trackId": 80025678
+          },
+          {
+            "displayTitle": "Ozark",
+            "artwork": {
+              "url": "https://occ-0-1234.cdn.netflix.com/boxart/ozark.jpg"
+            },
+            "trackId": 80117552
+          },
+          {
+            "displayTitle": "Dark",
+            "artwork": {
+              "url": "https://occ-0-1234.cdn.netflix.com/boxart/dark.jpg"
+            },
+            "trackId": 80100172
+          }
+        ]
+      }
+    ]
+  },
+  "orphanTiles": [
+    {
+      "name": "Standalone Film",
+      "poster": "https://occ-0-1234.cdn.netflix.com/boxart/film.jpg",
+      "webUrl": "https://www.netflix.com/watch/12345678"
+    }
+  ]
+}

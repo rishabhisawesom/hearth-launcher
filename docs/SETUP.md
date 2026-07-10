@@ -133,6 +133,22 @@ Selecting **YouTube** opens `youtube.com/tv` inside Hearth (fullscreen web view)
 
 **Returning home:** **Esc** or **Backspace** moves focus to the **Back** button (orange outline). Press **Return** on Back, or **Esc** again, to exit to the home grid. **↓** from Back re-enters the YouTube UI.
 
+### In-app Netflix (native browse)
+
+Selecting **Netflix** opens a **native SwiftUI browse UI** instead of the raw web shell. A **visible** WKWebView loads `netflix.com/browse` first so you can sign in; once catalog JSON is harvested from Netflix API responses, the UI switches to horizontal leanback rows with poster art.
+
+**Login once:** Sign in in the in-app web view when prompted. Netflix cookies persist in the default WKWebsiteDataStore between sessions.
+
+**Navigation:** Arrow keys move across poster tiles; **Return** opens the title watch page in a fullscreen WKWebView overlay.
+
+**Poster images:** Drop PNG files into `~/Library/Application Support/Hearth/posters/netflix/`.
+
+**Returning home:** Click **Back**, or focus **Back** and press **Return** / **Esc**.
+
+**Limitations:** Catalog parser is heuristic; after **15 seconds** without parsed rows, demo rows appear. Personal use only — not Netflix's real TV app.
+
+YouTube uses the in-app **web shell**. Netflix uses native browse (`NetflixExperienceView`).
+
 ## Themes & wallpaper (M4)
 
 **Theme** (Settings → Theme): Dark (default), Light, OLED Dark (true black).
